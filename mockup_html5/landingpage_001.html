@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCR — Decentralized Citizen Journalism Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #8e44ad;
+    --red: #e74c3c;
+    --teal: #16a085;
+    --blue: #2980b9;
+    --dark-blue: #2c3e50;
+    --green: #27ae60;
+    --yellow: #f1c40f;
+    --grey: #7f8c8d;
+    --light-grey: #f4f4f4;
+    --text-dark: #1a1a1a;
+    --text-light: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: #e5e5e5;
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ============ TOP NAVIGATION ============ */
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .nav-links li {
+    cursor: pointer;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links li::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--purple);
+    transition: width 0.3s;
+  }
+
+  .nav-links li:hover { color: var(--purple); }
+  .nav-links li:hover::after { width: 100%; }
+
+  .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 38px;
+    letter-spacing: -3px;
+    color: #000;
+  }
+
+  /* ============ MAIN BENTO GRID ============ */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 120px 260px 220px 220px 160px;
+    gap: 12px;
+    padding: 25px 50px;
+    max-width: 1500px;
+    margin: 0 auto;
+    flex: 1;
+  }
+
+  .grid-item {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .grid-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
+    pointer-events: none;
+  }
+
+  .grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+
+  .grid-item h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  .grid-item p {
+    font-size: 14px;
+    line-height: 1.55;
+    opacity: 0.92;
+  }
+
+  .grid-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.75;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .grid-item .meta {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: auto;
+    font-style: italic;
+  }
+
+  /* Grid placements */
+  .item-1 { grid-column: 1; grid-row: 1; background: var(--light-grey); color: var(--text-dark); }
+  .item-2 { grid-column: 2; grid-row: 1; background: var(--light-grey); color: var(--text-dark); }
+  .item-3 { grid-column: 3 / 5; grid-row: 1 / 3; background: var(--light-grey); color: var(--text-dark); }
+
+  .item-4 { grid-column: 1; grid-row: 2 / 4; background: var(--purple); color: var(--text-light); }
+  .item-5 { grid-column: 2; grid-row: 2; background: var(--red); color: var(--text-light); }
+  .item-6 { grid-column: 3; grid-row: 3; background: var(--grey); color: var(--text-light); }
+  .item-7 { grid-column: 4; grid-row: 2 / 4; background: var(--purple); color: var(--text-light); }
+
+  .item-8 { grid-column: 2; grid-row: 3 / 5; background: var(--teal); color: var(--text-light); }
+  .item-9 { grid-column: 3; grid-row: 4 / 6; background: var(--blue); color: var(--text-light); }
+  .item-10 { grid-column: 4; grid-row: 4; background: var(--grey); color: var(--text-light); }
+  .item-11 { grid-column: 1; grid-row: 4; background: var(--grey); color: var(--text-light); }
+
+  .item-12 { grid-column: 2; grid-row: 5; background: var(--dark-blue); color: var(--text-light); }
+  .item-13 { grid-column: 3 / 5; grid-row: 6; background: var(--green); color: var(--text-light); }
+
+  /* Specific styling */
+  .item-3 h2 { font-size: 52px; letter-spacing: 6px; margin-top: 20px; }
+  .item-3 .sub { font-size: 12px; color: #666; margin-bottom: 10px; font-weight: 600; }
+  .item-3 .desc { font-size: 13px; color: #555; max-width: 80%; }
+  .item-3 .report-year {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 1px;
+  }
+
+  .item-4 h2, .item-7 h2 { font-size: 38px; }
+  .item-8 h2, .item-9 h2, .item-12 h2, .item-13 h2 { font-size: 26px; }
+
+  .item-1 .label, .item-2 .label { color: #555; }
+
+  /* ============ FOUR COLUMN FOOTER ============ */
+  .footer {
+    background: #1a1a1a;
+    color: #cccccc;
+    padding: 60px 50px 30px;
+    margin-top: 30px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .footer-col h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 42px;
+    letter-spacing: -3px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+
+  .footer-logo span { color: var(--yellow); }
+
+  .footer-col p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #aaaaaa;
+    max-width: 320px;
+  }
+
+  .footer-col ul {
+    list-style: none;
+  }
+
+  .footer-col ul li {
+    font-size: 13px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .footer-col ul li:hover { color: var(--yellow); }
+
+  .footer-bottom {
+    max-width: 1500px;
+    margin: 40px auto 0;
+    padding-top: 25px;
+    border-top: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #888;
+  }
+
+  .footer-bottom .socials {
+    display: flex;
+    gap: 15px;
+  }
+
+  .footer-bottom .socials a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-bottom .socials a:hover { color: var(--yellow); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1100px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      padding: 20px;
+    }
+    .grid-item { grid-column: auto !important; grid-row: auto !important; min-height: 200px; }
+    .item-3 { grid-column: 1 / 3 !important; }
+    .item-13 { grid-column: 1 / 3 !important; }
+    .top-nav { padding: 15px 20px; }
+    .nav-links { gap: 15px; font-size: 12px; }
+    .footer { padding: 40px 20px 20px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <ul class="nav-links">
+      <li>Africa</li>
+      <li>Americas</li>
+      <li>Asia</li>
+      <li>Australia</li>
+    </ul>
+    <div class="logo">gcr</div>
+    <ul class="nav-links">
+      <li>West Asia</li>
+      <li>Russia</li>
+      <li>China</li>
+      <li>South Asia</li>
+    </ul>
+  </nav>
+
+  <!-- Bento Grid -->
+  <div class="bento-grid">
+
+    <!-- Row 1 -->
+    <div class="grid-item item-1">
+      <div>
+        <div class="label">Share</div>
+        <div class="label">Print</div>
+        <div class="label">Condensed Report (PDF)</div>
+      </div>
+    </div>
+
+    <div class="grid-item item-2">
+      <div class="label">From Our President</div>
+      <p style="font-size: 13px; color: #555; margin-top: 8px;">Decentralizing truth in the age of AI — a message on cryptographic journalism.</p>
+    </div>
+
+    <div class="grid-item item-3">
+      <div class="report-year">FOUNDATION CENTER · 2026 ANNUAL REPORT</div>
+      <div class="sub">Foundation Center 2026 Annual Report</div>
+      <h2>TRUST</h2>
+      <p class="desc">The people behind the information and tools that help you change the world through cryptographic verification and community governance.</p>
+    </div>
+
+    <!-- Row 2 & 3 -->
+    <div class="grid-item item-4">
+      <div>
+        <h2>Build</h2>
+        <p>the global decentralized data platform for citizen journalism and federated identity.</p>
+      </div>
+      <div class="meta">ActivityPub · DID · Web3</div>
+    </div>
+
+    <div class="grid-item item-5">
+      <div>
+        <h2>Connect</h2>
+        <p>journalists to verified sources, eyewitnesses, and the resources they need to thrive.</p>
+      </div>
+      <div class="meta">content_sources · content_witnesses</div>
+    </div>
+
+    <div class="grid-item item-6">
+      <div class="label">Financial Highlights</div>
+      <h2 style="font-size: 22px;">Tokenomics &amp;<br>Reward Pools</h2>
+    </div>
+
+    <div class="grid-item item-7">
+      <div>
+        <h2>Build</h2>
+        <p>Web3 monetization, NFT content certification, and creator payout systems.</p>
+      </div>
+      <div class="meta">content_nfts · creator_payouts</div>
+    </div>
+
+    <!-- Row 3 & 4 -->
+    <div class="grid-item item-8">
+      <div>
+        <h2>Empower</h2>
+        <p>readers with cryptographic proof, blockchain timestamps, and AI-assisted fact-checking tools.</p>
+      </div>
+      <div class="meta">media_forensic_analysis · content_blockchain_verification</div>
+    </div>
+
+    <div class="grid-item item-9">
+      <div>
+        <h2>Encourage</h2>
+        <p>greater community transparency through decentralized moderation and DAO governance.</p>
+      </div>
+      <div class="meta">dao_proposals · moderation_votes</div>
+    </div>
+
+    <div class="grid-item item-10">
+      <div class="label">2026 Top Contributors</div>
+      <h2 style="font-size: 20px;">Leaderboard</h2>
+    </div>
+
+    <div class="grid-item item-11">
+      <div class="label">2026 Top Contributors</div>
+      <h2 style="font-size: 20px;">Badges &amp;<br>Reputation</h2>
+    </div>
+
+    <!-- Row 5 & 6 -->
+    <div class="grid-item item-12">
+      <div>
+        <h2>Leadership</h2>
+        <p style="font-size: 13px;">in AI deepfake detection and media forensics.</p>
+      </div>
+    </div>
+
+    <div class="grid-item item-13">
+      <div>
+        <h2>Communicate</h2>
+        <p>seamlessly across the fediverse via ActivityPub interoperability and cross-platform syndication.</p>
+      </div>
+      <div class="meta">activity_pub_actors · content_syndication</div>
+    </div>
+
+  </div>
+
+  <!-- Four Column Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+
+      <!-- Column 1: Logo & About -->
+      <div class="footer-col">
+        <div class="footer-logo">gcr<span>.</span></div>
+        <p>Global Citizen Reporting — a world-class decentralized citizen journalism platform powered by cryptographic verification, community governance, and federated identity.</p>
+      </div>
+
+      <!-- Column 2: Platform -->
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li>Discover Stories</li>
+          <li>Verified Journalism</li>
+          <li>Investigative Hub</li>
+          <li>Fact-Check Center</li>
+          <li>DAO Governance</li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Community -->
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li>Become a Reporter</li>
+          <li>Rewards &amp; Tokens</li>
+          <li>Badges &amp; Reputation</li>
+          <li>Federated Instances</li>
+          <li>Open Source</li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Legal -->
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li>Privacy Policy</li>
+          <li>GDPR Compliance</li>
+          <li>Terms of Service</li>
+          <li>Data Retention</li>
+          <li>Contact</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div>Copyright 2025-26 B ORI Inc. Canada. Awase Khirni Syed. All Rights Reserved.</div>
+      <div class="socials">
+        <a href="#">Substack</a>
+        <a href="#">Mastodon</a>
+        <a href="#">GitHub</a>
+        <a href="#">RSS</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
